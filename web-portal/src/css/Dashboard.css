@@ -1,0 +1,88 @@
+/* Layout Essentials */
+.layout-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+}
+
+.horizontal-header {
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.app-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden; /* Prevents whole-page scroll; only main-content scrolls */
+}
+
+/* Sidebar */
+.vertical-sidebar {
+  width: 90px;
+  border-right: 1px solid #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px 0;
+  gap: 30px;
+}
+
+/* Content & Grid */
+.main-content {
+  flex: 1;
+  padding: 40px;
+  overflow-y: auto;
+  background-color: #fcfcfc;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 30px;
+  width: 100%;
+}
+
+.dest-card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
+  aspect-ratio: 0.8;
+  display: flex;
+  flex-direction: column;
+}
+
+.dest-card:hover { transform: scale(1.03); }
+
+.card-image-box {
+  flex: 1;
+  background-size: cover;
+  background-position: center;
+}
+
+/* Details Page */
+.details-layout {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 50px;
+  margin-top: 30px;
+}
+
+.hero-img {
+  height: 500px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 30px;
+}
+
+@media (max-width: 900px) {
+  .details-layout { grid-template-columns: 1fr; }
+  .hero-img { height: 300px; }
+}
