@@ -4,6 +4,7 @@ import Destinations from "./models/destinations.model.js";
 import destinationsRoute from "./routes/destinations.route.js";
 import paymentRoutes from "./routes/payment.route.js";
 import dotenv from "dotenv";
+import cors from "cors"
 
 dotenv.config();
 
@@ -12,6 +13,8 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+app.use(cors()); // This allows your React dashboard to talk to your API
 
 //middleware
 app.use(express.json());

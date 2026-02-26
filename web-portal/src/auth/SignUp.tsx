@@ -11,6 +11,10 @@ export default function Signup() {
   const { signup } = useAuth();
   const navigate = useNavigate();
 
+  async function handleLogin() {
+      navigate ('/Login')
+  }
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
 
@@ -75,6 +79,10 @@ export default function Signup() {
           type="submit"
         >
           Sign Up
+        </button>
+        <button
+          onClick={handleLogin}>
+            login
         </button>
       </form>
     </div>

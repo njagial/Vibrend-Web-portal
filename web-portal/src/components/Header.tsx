@@ -23,7 +23,7 @@ export default function Header() {
         </div>
 
         <nav className="nav">
-          <a href="/Home">Home</a>
+          <a href="/dashboard">Home</a>
           <a href="/destinations">Destinations</a>
           <a href="/packages">Packages</a>
           <a href="/about">About</a>

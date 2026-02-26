@@ -62,9 +62,14 @@
 .dest-card:hover { transform: scale(1.03); }
 
 .card-image-box {
-  flex: 1;
+  width: 100%;
+  height: 200px; /* Or flex: 1 if the parent has a height */
   background-size: cover;
   background-position: center;
+  background-repeat: no-repeat;
+  /* Add this for a smooth look while images load */
+  transition: opacity 0.3s ease-in-out; 
+} /* Helps see if the box exists */
 }
 
 /* Details Page */
@@ -85,4 +90,103 @@
 @media (max-width: 900px) {
   .details-layout { grid-template-columns: 1fr; }
   .hero-img { height: 300px; }
+}
+
+/* Preferences Form */
+.preferences-section {
+  margin: 20px 0;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.pref-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.counter-input {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: white;
+  padding: 5px 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.counter-input button {
+  background: #eee;
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.duration-select {
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  width: 120px;
+}
+
+.total-price-display {
+  margin-top: 10px;
+  padding-top: 15px;
+  border-top: 2px dashed #ddd;
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.total-price-display .amount {
+  color: #27ae60; /* Professional green for pricing */
+}
+
+.phone-group {
+  flex-direction: column;
+  align-items: flex-start !important;
+  gap: 8px;
+}
+
+.input-wrapper {
+  width: 100%;
+}
+
+.input-wrapper input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input-wrapper input:focus {
+  border-color: #27ae60;
+}
+
+.input-wrapper input.error {
+  border-color: #e74c3c;
+}
+
+.input-hint {
+  font-size: 0.75rem;
+  color: #e74c3c;
+  margin-top: 4px;
+  display: block;
+}
+
+/* Disable button style */
+.cta-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }

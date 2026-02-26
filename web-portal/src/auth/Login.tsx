@@ -10,6 +10,10 @@ export default function Login() {
   const { login, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
 
+  async function handleSignUp() {
+    navigate('/SignUp');
+  }
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
 
@@ -30,7 +34,7 @@ export default function Login() {
       setError('');
       setLoading(true);
       await signInWithGoogle();
-      navigate('/home');
+      navigate('/dashboard');
     } catch (err: any) {
       setError('Failed to sign in with Google: ' + err.message);
     }
@@ -83,6 +87,12 @@ export default function Login() {
       >
         Sign In with Google
       </button>
+      <button
+        onClick={handleSignUp}
+        >
+        signup
+      </button>
     </div>
   );
 }
+
