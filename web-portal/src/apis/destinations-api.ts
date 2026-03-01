@@ -7,7 +7,7 @@ export interface Destination {
   location: string;
   description: string;
   price: string;
-  image: string;
+  image_url: string;
 }
 
 // In Web, 'localhost' is preferred over the IP for local dev.

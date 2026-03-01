@@ -5,6 +5,7 @@ import destinationsRoute from "./routes/destinations.route.js";
 import paymentRoutes from "./routes/payment.route.js";
 import dotenv from "dotenv";
 import cors from "cors"
+import bookingRoutes from './routes/booking.route.js';
 
 dotenv.config();
 
@@ -24,6 +25,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/api/destinations", destinationsRoute) 
 
 app.use("/api/payments", paymentRoutes);
+
+app.use('/api/destinations', destinationsRoute);
+app.use('/api/bookings', bookingRoutes); // This adds the /api/bookings prefix
 
 
 app.get("/", (req, res) => {
