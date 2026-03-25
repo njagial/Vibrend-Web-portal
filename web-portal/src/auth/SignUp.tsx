@@ -1,6 +1,9 @@
 import { useState,type FormEvent } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { Mail, Lock, UserPlus, ArrowLeft } from 'lucide-react';
+import '../css/SignUp.css';
+
 
 export default function Signup() {
   const [email, setEmail] = useState('');
@@ -33,58 +36,65 @@ export default function Signup() {
     setLoading(false);
   }
 
-  return (
-    <div className='signUp'>
-      <h2>Sign Up</h2>
-      {error && <div className='signUp-error'>{error}</div>}
-      
-      <form onSubmit={handleSubmit}>
-        <div className='signUp-form'>
-          <label>Email</label>
+ return (
+  <div className="auth-container">
+    <div className="auth-card">
+      <div className="auth-header">
+        <h1>Create Account</h1>
+        <p>Join the Vibrendportal community today.</p>
+      </div>
+
+      {error && <div className="error-toast">{error}</div>}
+
+      <form className="auth-form" onSubmit={handleSubmit}>
+        <div className="input-group">
+          <label><Mail size={16} /> Email Address</label>
           <input
-            title="email_signup"
-            className='signUp-email'
-            placeholder='Enter Email'
+            type="email"
+            placeholder="your@email.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
         </div>
-        
-        <div className='signUp-password'>
-          <label>Password</label>
-          <input
-            title='password_signup'
-            placeholder='Enter your Password'
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required/>
-        </div>
-        
-        <div className='signUp-confirm'>
-          <label>Confirm Password</label>
+
+        <div className="input-group">
+          <label><Lock size={16} /> Create Password</label>
           <input
             type="password"
-            className='signUp-confirmPin'
-            placeholder='Confirm your Password'
+            placeholder="Choose a strong password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="input-group">
+          <label><Lock size={16} /> Confirm Password</label>
+          <input
+            type="password"
+            placeholder="Repeat your password"
             value={passwordConfirm}
             onChange={(e) => setPasswordConfirm(e.target.value)}
             required
           />
         </div>
-        
+
         <button 
-          disabled={loading} 
-          className='signUp-enter'
-          type="submit"
+          type="submit" 
+          className="btn-primary" 
+          disabled={loading}
         >
-          Sign Up
-        </button>
-        <button
-          onClick={handleLogin}>
-            login
+          {loading ? <div className="spinner-small" /> : <><UserPlus size={18} /> Get Started</>}
         </button>
       </form>
+
+      <div className="auth-footer">
+        <button className="btn-secondary-link" onClick={handleLogin}>
+          <ArrowLeft size={14} /> Back to Login
+        </button>
+      </div>
     </div>
-  );
+  </div>
+);
 }

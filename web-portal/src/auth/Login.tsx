@@ -1,6 +1,9 @@
 import { useState,type FormEvent } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { Mail, Lock, LogIn, Chrome } from 'lucide-react';
+import '../css/Login.css';
+
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -42,57 +45,62 @@ export default function Login() {
   }
 
   return (
-    <div className='login-form'>
-      <h2>Log In</h2>
-      {error && <div className='login-error'>{error}</div>}
-      
-      <form onSubmit={handleSubmit}>
-        <div className='login-submit'>
-          <label>Email</label>
+  <div className="auth-container">
+    <div className="login-card">
+      <div className="auth-header">
+        <h1>Welcome Back</h1>
+        <p>Your next journey starts here.</p>
+      </div>
+
+      {error && <div className="error-toast">{error}</div>}
+
+      <form className="auth-form" onSubmit={handleSubmit}>
+        <div className="input-field">
+          <label><Mail size={16} /> Email Address</label>
           <input
-            className='login-email'
             type="email"
-            placeholder='Enter Email'
+            placeholder="name@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
         </div>
-        
-        <div className='login-pin'>
-          <label>Password</label>
+
+        <div className="input-field">
+          <label><Lock size={16} /> Password</label>
           <input
             type="password"
-            className='login-password'
-            placeholder='Enter your Password'
+            placeholder="••••••••"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
         </div>
-        
+
         <button 
-          disabled={loading} 
-          className='login-enter'
-          type="submit"
+          type="submit" 
+          className="btn-primary" 
+          disabled={loading}
         >
-          Log In
+          {loading ? <div className="spinner-small" /> : <><LogIn size={18} /> Log In</>}
         </button>
       </form>
 
+      <div className="divider"><span>or</span></div>
+
       <button 
-        onClick={handleGoogleSignIn}
-        className='login-google'
+        onClick={handleGoogleSignIn} 
+        className="btn-google" 
         disabled={loading}
       >
-        Sign In with Google
+        <Chrome size={18} /> Sign In with Google
       </button>
-      <button
-        onClick={handleSignUp}
-        >
-        signup
-      </button>
+
+      <p className="auth-footer">
+        New here? <span onClick={handleSignUp} className="auth-link">Create an account</span>
+      </p>
     </div>
-  );
+  </div>
+);
 }
 
