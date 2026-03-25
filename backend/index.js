@@ -1,11 +1,12 @@
 import express from "express";
 import mongoose from "mongoose";
-import Destinations from "./models/destinations.model.js";
+import Amadeus from "amadeus"
 import destinationsRoute from "./routes/destinations.route.js";
 import paymentRoutes from "./routes/payment.route.js";
 import dotenv from "dotenv";
 import cors from "cors"
 import bookingRoutes from './routes/booking.route.js';
+import flightRoutes from './routes/amadeus.route.js';
 
 dotenv.config();
 
@@ -14,6 +15,7 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
 
 app.use(cors()); // This allows your React dashboard to talk to your API
 
@@ -27,12 +29,15 @@ app.use("/api/destinations", destinationsRoute)
 app.use("/api/payments", paymentRoutes);
 
 app.use('/api/destinations', destinationsRoute);
+
 app.use('/api/bookings', bookingRoutes); // This adds the /api/bookings prefix
 
+app.use('/api/flights', flightRoutes); // This adds the /api/flights prefix
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
+
 
 
 

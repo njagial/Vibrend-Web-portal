@@ -11,7 +11,7 @@ export const initiatePayment = async (phone: string, amount: number): Promise<an
     try {
         const response = await axios.post(`${API_BASE}/payments/stkpush`, { 
             phone, 
-            amount 
+            amount: amount * 129 
         });
         return response.data;
     } catch (error) {
