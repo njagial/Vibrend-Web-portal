@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Car, Smartphone, CheckCircle, ShieldCheck } from 'lucide-react';
+import dotenv from 'dotenv';
+
+
+dotenv.config();
+
+const API_BASE = process.env.Backend_url || "http://localhost:3000/api";
 
 const CarLeasing = () => {
   const [cars, setCars] = useState([]);
@@ -10,7 +16,7 @@ const CarLeasing = () => {
   useEffect(() => {
     const fetchFleet = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/api/cars");
+        const res = await axios.get(`${API_BASE}/cars`);
         setCars(res.data);
       } catch (err) {
         console.error("Database error:", err);
@@ -27,7 +33,7 @@ const CarLeasing = () => {
 
     setStatus('processing');
     try {
-      await axios.post("http://localhost:3000/api/payments/stk-push", {
+      await axios.post(`${API_BASE}/payments/stk-push`, {
         phone,
         amount: car.pricePerDay,
         carModel: car.model

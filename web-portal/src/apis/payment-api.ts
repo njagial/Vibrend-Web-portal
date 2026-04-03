@@ -1,8 +1,10 @@
 import axios from "axios";
+import dotenv from 'dotenv';
 
-// TIP: In React, we usually use environment variables for the URL
-// Change this to "http://localhost:3000/api" for local web development
-const API_BASE ="http://localhost:3000/api";
+
+dotenv.config();
+
+const API_BASE = process.env.Backend_url || "http://localhost:3000/api";
 
 /**
  * Initiates an STK Push payment

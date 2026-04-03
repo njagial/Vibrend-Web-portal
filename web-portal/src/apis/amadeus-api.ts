@@ -1,6 +1,10 @@
 import axios from 'axios';
+import dotenv from 'dotenv';
 
-const API_BASE = "http://localhost:3000/api";
+
+dotenv.config();
+
+const API_BASE = process.env.Backend_url || "http://localhost:3000/api";
 
 export interface FlightOffer {
   id: string;

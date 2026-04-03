@@ -1,7 +1,10 @@
 import axios from 'axios';
+import dotenv from 'dotenv';
 
-// Use the same base URL as your destinations API
-const API_BASE = "http://localhost:3000/api/bookings";
+
+dotenv.config();
+
+const API_BASE = process.env.Backend_url || "http://localhost:3000/api";
 
 export interface Booking {
   id?: string;
