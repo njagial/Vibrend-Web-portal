@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Car, Smartphone, CheckCircle, ShieldCheck } from 'lucide-react';
-import dotenv from 'dotenv';
 
 
-dotenv.config();
-
-const API_BASE = process.env.Backend_url || "http://localhost:3000/api";
+const API_BASE = import.meta.env.VITE_Backend_url;
 
 const CarLeasing = () => {
   const [cars, setCars] = useState([]);

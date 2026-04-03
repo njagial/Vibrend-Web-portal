@@ -1,8 +1,5 @@
 import axios from 'axios';
-import dotenv from 'dotenv';
 
-
-dotenv.config();
 
 // Interface defining what a Destination looks like
 export interface Destination {
@@ -15,7 +12,7 @@ export interface Destination {
 }
 
 
-const API_BASE = process.env.Backend_url || "http://localhost:3000/api";
+const API_BASE = import.meta.env.VITE_Backend_url;
 
 const API = axios.create({
   baseURL: API_BASE,
