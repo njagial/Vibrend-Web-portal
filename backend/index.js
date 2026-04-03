@@ -1,16 +1,14 @@
 import express from "express";
 import mongoose from "mongoose";
-import Amadeus from "amadeus"
 import destinationsRoute from "./routes/destinations.route.js";
 import paymentRoutes from "./routes/payment.route.js";
-import dotenv from "dotenv";
 import cors from "cors"
 import bookingRoutes from './routes/booking.route.js';
-import flightRoutes from './routes/amadeus.route.js';
+import amadeusRoutes from './routes/amadeus.route.js';
+import dotenv from 'dotenv';
+import carRoutes from './routes/car.route.js';
 
 dotenv.config();
-
-
 
 
 const app = express();
@@ -28,11 +26,11 @@ app.use("/api/destinations", destinationsRoute)
 
 app.use("/api/payments", paymentRoutes);
 
-app.use('/api/destinations', destinationsRoute);
-
 app.use('/api/bookings', bookingRoutes); // This adds the /api/bookings prefix
 
-app.use('/api/flights', flightRoutes); // This adds the /api/flights prefix
+app.use('/api', amadeusRoutes); // This adds the /api/flights prefix for Amadeus routes
+
+app.use('/api/cars', carRoutes); // This adds the /api/cars prefix for car routes
 
 app.get("/", (req, res) => {
   res.send("Hello World!");

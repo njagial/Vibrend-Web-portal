@@ -55,13 +55,3 @@ export const deleteDestination = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
-
-
-//module.exports = {
-    //getDestinations,
-    //getDestination,
-    //postDestination,
-    //updateDestination,
-    //deleteDestination,
-    // Exporting the functions to be used in routes
-//};

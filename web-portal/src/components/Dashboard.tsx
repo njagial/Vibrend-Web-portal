@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import '../css/Dashboard.css';
 import { 
   Home, Search, User, FileText, Bed, Plane, 
   Car, LifeBuoy, ArrowLeft,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ArrowRight
 } from 'lucide-react';
 import { LogOut } from 'lucide-react';
@@ -12,20 +13,9 @@ import { initiatePayment, checkPaymentStatus } from '../apis/payment-api';
 import { createBooking, fetchMyBookings, type Booking } from '../apis/booking';
 import { Trash2 } from 'lucide-react';
 import { deleteBooking } from '../apis/booking';
-import { fetchCars, fetchFlights, type FlightOffer } from '../apis/amadeus-api.ts';
-import axios from 'axios';
+import { fetchFlights, type FlightOffer } from '../apis/amadeus-api.ts';
+import CarLeasing from './CarLeasing.tsx';  
 
-interface Car {
-  id: string;
-  vehicle?: {
-    model: string;
-    type: string;
-  };
-  provider: string;
-  price: {
-    total: string;
-  };
-}
 
 const Dashboard: React.FC = () => {
   const [destinations, setDestinations] = useState<Destination[]>([]);
@@ -46,8 +36,6 @@ const Dashboard: React.FC = () => {
     dest: 'DXB',
     date: new Date().toISOString().split('T')[0] // Default to today
   });
-  const [cars, setCars] = useState<Car[]>([]);
-  const [carQuery, setCarQuery] = useState({ city: 'NBO', pickup: '', dropoff: '' });
 
   const navigate = useNavigate();
 
@@ -90,7 +78,7 @@ const Dashboard: React.FC = () => {
     }
   }, [currentTab]);
 
-  const handleFlightSearch = async () => {
+  const handleFlightSearch = useCallback(async () => {
     setLoading(true);
     try {
       // Calling your dedicated API file
@@ -101,52 +89,15 @@ const Dashboard: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [flightQuery]);
 
   // This ensures the search runs when the user first opens the tab
   useEffect(() => {
     if (currentTab === 'flights' && flights.length === 0) {
       handleFlightSearch();
     }
-  }, [currentTab]);
+  }, [currentTab, flights.length, handleFlightSearch]);
 
-  const handleCarSearch = async () => {
-  // 1. Basic Validation
-  if (!carQuery.city || carQuery.city.length !== 3) {
-    alert("Please enter a valid 3-letter City Code (e.g., NBO)");
-    return;
-  }
-
-  setLoading(true);
-  try {
-    // 2. Execute the API call from your travel-api.ts
-    const data = await fetchCars(
-      carQuery.city, 
-      carQuery.pickup, 
-      carQuery.dropoff
-    );
-
-    // 3. Update the state with the results
-    if (data && data.length > 0) {
-      setCars(data);
-    } else {
-      setCars([]);
-      console.log("No cars found for these criteria.");
-    }
-  } catch (error) {
-    console.error("Failed to fetch cars:", error);
-    // Optional: Add a toast notification here for the user
-  } finally {
-    setLoading(false);
-  }
-};
-
-  useEffect(() => {
-  // Auto-search only if the tab is 'cars' and we have a city, but no results yet
-  if (currentTab === 'cars' && cars.length === 0 && carQuery.city) {
-    handleCarSearch();
-  }
-}, [currentTab]);
 
   const handleDelete = async (id: string) => {
   if (window.confirm("Are you sure you want to remove this booking from your history?")) {
@@ -485,47 +436,9 @@ const Dashboard: React.FC = () => {
                   )}
                 </div>
               </div>
-            ) : currentTab === 'cars' ? (
-              <div className="cars-view">
-                <div className="view-header">
-                  <h2 className="page-title">Car Leasing & Rentals</h2>
-                  <p className="page-subtitle">Find the perfect ride for your trip</p>
-                </div>
-
-                <div className="car-search-bar">
-                  <input 
-                    type="text" placeholder="City (e.g. NBO)" 
-                    onChange={(e) => setCarQuery({...carQuery, city: e.target.value.toUpperCase()})}
-                  />
-                  <input type="date" onChange={(e) => setCarQuery({...carQuery, pickup: e.target.value})} />
-                  <input type="date" onChange={(e) => setCarQuery({...carQuery, dropoff: e.target.value})} />
-                  <button onClick={async () => {
-                    setLoading(true);
-                    const data = await fetchCars(carQuery.city, carQuery.pickup, carQuery.dropoff);
-                    setCars(data);
-                    setLoading(false);
-                  }}>Search Cars</button>
-                </div>
-
-                <div className="car-results-grid">
-                  {cars.map(car => (
-                    <div key={car.id} className="car-card">
-                      <div className="car-image-placeholder">
-                        <Car size={48} />
-                      </div>
-                      <div className="car-details">
-                        <h4>{car.vehicle?.model || "Premium Vehicle"}</h4>
-                        <p className="car-type">{car.vehicle?.type} • {car.provider}</p>
-                        <div className="car-footer">
-                          <span className="car-price">Ksh {(parseFloat(car.price.total) * 128).toLocaleString()}/day</span>
-                          <button className="rent-btn">Rent Now</button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ) : (
+      ) : currentTab === 'cars' ? (
+        <CarLeasing />
+      ) : (
               /* --- 4. DEFAULT EXPLORE GRID --- */
             <div className="grid-view">
               <h2 className="page-title">Explore Destinations</h2>

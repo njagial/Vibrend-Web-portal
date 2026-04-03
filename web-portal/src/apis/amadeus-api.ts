@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE = "http://localhost:3000/api/flights";
+const API_BASE = "http://localhost:3000/api";
 
 export interface FlightOffer {
   id: string;
@@ -9,6 +9,7 @@ export interface FlightOffer {
     currency: string;
   };
   itineraries: Array<{
+    duration: any;
     segments: Array<{
       departure: { iataCode: string; at: string };
       arrival: { iataCode: string; at: string };
@@ -24,28 +25,14 @@ export interface FlightOffer {
  */
 export const fetchFlights = async (origin: string, destination: string, date: string): Promise<FlightOffer[]> => {
   try {
+    // Points to http://localhost:3000/api/flights
     const response = await axios.get(`${API_BASE}/flights`, {
       params: { origin, destination, date }
     });
     // Amadeus always wraps the array in a 'data' property
-    return response.data.data || [];
+    return response.data || [];
   } catch (error) {
     console.error("Error fetching flights:", error);
     return []; 
-  }
-};
-
-/**
- * Fetch car leasing/rental offers for a specific city
- */
-export const fetchCars = async (cityCode: string, pickup: string, dropoff: string) => {
-  try {
-    const response = await axios.get(`${API_BASE}/cars`, {
-      params: { cityCode, pickupDate: pickup, returnDate: dropoff }
-    });
-    return response.data.data || [];
-  } catch (error) {
-    console.error("Car search error:", error);
-    return [];
   }
 };
