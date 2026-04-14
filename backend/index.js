@@ -28,7 +28,7 @@ app.use("/api/payments", paymentRoutes);
 
 app.use('/api/bookings', bookingRoutes); // This adds the /api/bookings prefix
 
-app.use('/api', amadeusRoutes); // This adds the /api/flights prefix for Amadeus routes
+app.use('/api/flights', amadeusRoutes); // This adds the /api/flights prefix for Amadeus routes
 
 app.use('/api/cars', carRoutes); // This adds the /api/cars prefix for car routes
 
