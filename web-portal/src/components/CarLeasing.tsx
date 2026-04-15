@@ -1,28 +1,40 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Car, Smartphone, CheckCircle, ShieldCheck, ArrowLeft, Fuel, Gauge, Settings } from 'lucide-react';
+import { Car as CarIcon, Smartphone, CheckCircle, ShieldCheck, ArrowLeft, Fuel, Gauge, Settings } from 'lucide-react';
 import SkeletonCard from './SkeletonCard';
 import { initiatePayment, checkPaymentStatus } from '../apis/payment-api';
 import { createBooking } from '../apis/booking';
 import '../css/CarLeasing.css';
 
+// 1. DEFINE THE INTERFACE (This fixes the 'never' and 'undefined' errors)
+interface Car {
+  _id: string;
+  id?: string;
+  model: string;
+  imageUrl: string;
+  city: string;
+  pricePerDay: number | string;
+  provider: string;
+}
+
 const API_BASE = import.meta.env.VITE_Backend_url;
 
 const CarLeasing = () => {
-  const [cars, setCars] = useState([]);
+  // 2. USE THE INTERFACE IN STATE
+  const [cars, setCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isPaying, setIsPaying] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState<null | 'pending' | 'success' | 'failed'>(null);
-  const [duration, setDuration] = useState(1); // Days to rent
+  const [duration] = useState(1); // Since setDuration was unused, I removed it to fix TS6133
   const [phoneNumber, setPhoneNumber] = useState("");
 
-
   const isValidPhone = /^254[17]\d{8}$/.test(phoneNumber);
+
   useEffect(() => {
     const fetchFleet = async () => {
       try {
-        const res = await axios.get(`${API_BASE}/cars`)
+        const res = await axios.get(`${API_BASE}/cars`);
         setCars(res.data);
       } catch (err) {
         console.error("Database error:", err);
@@ -33,79 +45,73 @@ const CarLeasing = () => {
     fetchFleet();
   }, []);
 
-  // Find the selected car safely
-  const selectedCar = cars.find((c: any) => c._id === selectedId || c.id === selectedId);
+  // 3. SAFE ACCESS (The '?' prevents "Possibly Undefined" errors)
+  const selectedCar = cars.find((c) => c._id === selectedId || c.id === selectedId);
 
- const handleLease = async () => {
-  // 1. Validations
-  if (!selectedCar || !isValidPhone) {
-    alert("Please enter a valid M-Pesa number (254...)");
-    return;
-  }
-  
-  // 2. Calculate Total (Car usually just needs Price * Duration)
-  const base = typeof selectedCar.pricePerDay === 'string' 
-    ? parseInt(selectedCar.pricePerDay.replace(/[^0-9]/g, '')) 
-    : selectedCar.pricePerDay;
-    
-  const total = base * duration;
-
-  try {
-    setIsPaying(true);
-    setPaymentStatus('pending');
-
-    // 3. Trigger STK Push
-    const response = await initiatePayment(phoneNumber, total);
-    
-    if (response.CheckoutRequestID) {
-      // 4. Polling for Result
-      const interval = setInterval(async () => {
-        try {
-          const status = await checkPaymentStatus(response.CheckoutRequestID);
-          
-          if (status.ResultCode === '0') {
-            setPaymentStatus('success');
-            setIsPaying(false);
-            clearInterval(interval);
-
-            // 5. Create Rental Record in Database
-            await createBooking({
-                carId: selectedCar._id.toString(),
-                carModel: selectedCar.model,
-                amount: total,
-                duration: duration,
-                phoneNumber: phoneNumber,
-                type: 'car-rental', // Distinguish from tourism bookings
-                status: 'confirmed'
-            });
-            alert("Car Rental Confirmed!");
-          } 
-          else if (status.ResultCode !== 'pending') {
-            setPaymentStatus('failed');
-            setIsPaying(false);
-            clearInterval(interval);
-            alert("Payment failed or cancelled.");
-          }
-        } catch (pollError) {
-          console.error("Status check failed:", pollError);
-        }
-      }, 5000);
+  const handleLease = async () => {
+    if (!selectedCar || !isValidPhone) {
+      alert("Please enter a valid M-Pesa number (254...)");
+      return;
     }
-  } catch (error) {
-    console.error("Lease initiation error:", error);
-    setPaymentStatus('failed');
-    setIsPaying(false);
-  }
-};
+    
+    // Convert price string/number safely
+    const base = typeof selectedCar.pricePerDay === 'string' 
+      ? parseInt(selectedCar.pricePerDay.replace(/[^0-9]/g, '')) 
+      : (selectedCar.pricePerDay as number);
+      
+    const total = base * duration;
 
-  console.log("Selected Car:", selectedCar);
+    try {
+      setIsPaying(true);
+      setPaymentStatus('pending');
 
-  // Determine which view to render
+      const response = await initiatePayment(phoneNumber, total);
+      
+      if (response.CheckoutRequestID) {
+        const interval = setInterval(async () => {
+          try {
+            const status = await checkPaymentStatus(response.CheckoutRequestID);
+            
+            if (status.ResultCode === '0') {
+              setPaymentStatus('success');
+              setIsPaying(false);
+              clearInterval(interval);
+
+              await createBooking({
+                  carId: selectedCar._id.toString(),
+                  carModel: selectedCar.model,
+                  amount: total,
+                  duration: duration,
+                  phoneNumber: phoneNumber,
+                  type: 'car-rental',
+                  status: 'confirmed'
+              });
+              alert("Car Rental Confirmed!");
+            } 
+            else if (status.ResultCode !== 'pending') {
+              setPaymentStatus('failed');
+              setIsPaying(false);
+              clearInterval(interval);
+              alert("Payment failed or cancelled.");
+            }
+          } catch (pollError) {
+            console.error("Status check failed:", pollError);
+          }
+        }, 5000);
+      }
+    } catch (error) {
+      console.error("Lease initiation error:", error);
+      setPaymentStatus('failed');
+      setIsPaying(false);
+    }
+  };
+
   const viewStatus = (selectedId && selectedCar) ? 'DETAILS' : loading ? 'LOADING' : 'GRID';
 
   const renderView = () => {
     switch (viewStatus) {
       case 'DETAILS':
+        // Use Optional Chaining (?.) for all selectedCar properties
         return (
           <div className="details-view fade-in-view">
             <button className="back-link" onClick={() => setSelectedId(null)}>
@@ -115,13 +121,13 @@ const CarLeasing = () => {
             <div className="details-layout">
               <div 
                 className="hero-img" 
-                style={{ backgroundImage: `url("${selectedCar.imageUrl}")` }} 
+                style={{ backgroundImage: `url("${selectedCar?.imageUrl}")` }} 
               />
               
               <div className="info-pane">
                 <div className="info-head">
-                  <h1>{selectedCar.model}</h1>
-                  <span className="location-badge">{selectedCar.city}</span>
+                  <h1>{selectedCar?.model}</h1>
+                  <span className="location-badge">{selectedCar?.city}</span>
                 </div>
 
                 <div className="car-specs-row">
@@ -143,7 +149,7 @@ const CarLeasing = () => {
                   
                   <div className="total-price-display">
                     <span>Daily Rate:</span>
-                    <span className="amount">Ksh {selectedCar.pricePerDay.toLocaleString()}</span>
+                    <span className="amount">Ksh {selectedCar?.pricePerDay?.toLocaleString()}</span>
                   </div>
                     <button
                       className="cta-button"
@@ -169,7 +175,7 @@ const CarLeasing = () => {
           </div>
         );
 
-     case 'GRID':
+      case 'GRID':
       default:
         return (
           <div className="car-leasing-section fade-in-view">
@@ -181,28 +187,23 @@ const CarLeasing = () => {
             </header>
 
             <div className="car-grid">
-              {cars.map((car: any) => {
-                // 1. Sanitize the URL (handles the naming mismatch and trailing quotes)
-                // Ensure we check both image_url and imageUrl just in case
-                const rawUrl = car.imageUrl;
-                const cardImage = rawUrl?.replace(/[\\"]+$/, '');
-
+              {cars.map((car: Car) => {
+                const cardImage = car.imageUrl?.replace(/[\\"]+$/, '');
                 return (
                   <div key={car._id} className="car-card" onClick={() => setSelectedId(car._id)}>
                     <div 
                       className="car-image-box" 
                       style={{ 
                         backgroundImage: cardImage ? `url("${cardImage}")` : 'none',
-                        // Use 'contain' to show the whole car, 'cover' if you want it to fill the box
                         backgroundSize: 'contain', 
                         backgroundRepeat: 'no-repeat',
                         backgroundPosition: 'center',
-                        height: '180px', // Slightly shorter for better card proportions
-                        padding: '20px',  // Frames the car so it doesn't touch the edges
-                        backgroundColor: '#f8fafc' // Light matte background for the frame
+                        height: '180px',
+                        padding: '20px',
+                        backgroundColor: '#f8fafc'
                       }}
                     >
-                      {!cardImage && <Car size={40} color="#cbd5e1" />}
+                      {!cardImage && <CarIcon size={40} color="#cbd5e1" />}
                     </div>
 
                     <div className="car-info">
@@ -219,7 +220,7 @@ const CarLeasing = () => {
                         <span className="amount">Ksh {car.pricePerDay?.toLocaleString()}</span>
                         <span className="currency">per day</span>
                       </div>
-                      <div className="view-details-pill" style={{ width: '100%', textAlign: 'center' }}>
+                      <div className="view-details-pill">
                         Rent Now
                       </div>
                     </div>

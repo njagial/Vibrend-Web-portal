@@ -5,7 +5,7 @@ import CarLeasing from './CarLeasing.tsx';
 import DestinationsView from './DestinationsView.tsx';
 import HistoryView from './HistoryView.tsx';
 import Sidebar from './Sidebar.tsx';
-import Navbar from './NavBar.tsx';
+import Navbar from './Navbar.tsx';
 import FlightView from './FlightView.tsx';
 
 

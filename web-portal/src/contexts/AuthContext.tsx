@@ -15,7 +15,7 @@ interface AuthContextType {
     signup: (email: string, password: string) => Promise<never>;
     login: (email: string, password: string) => Promise<never>;
     logout: () => Promise<void>;
-    signInWithGoogle: () => Promise<never>;
+    signInWithGoogle: () => Promise<any>;
     loading: boolean;
 }
 
