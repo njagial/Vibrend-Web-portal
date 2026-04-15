@@ -1,117 +1,383 @@
+/* ─── Login.css ─────────────────────────────────────────────────────────────
+   Bold & Modern Admin Portal — Login Page
+   Font: Import Syne + DM Sans in your index.html or index.css:
+──────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  --bg:             #0a0a0f;
+  --card-bg:        #111118;
+  --accent:         #d4f03c;
+  --accent-dim:     #b8d432;
+  --accent-glow:    rgba(212, 240, 60, 0.18);
+  --text:           #f0f0f5;
+  --muted:          #6b6b80;
+  --border:         rgba(255, 255, 255, 0.08);
+  --input-bg:       rgba(255, 255, 255, 0.04);
+  --input-border:   rgba(255, 255, 255, 0.12);
+  --input-focus-shadow: 0 0 0 3px rgba(212, 240, 60, 0.25);
+  --error-bg:       rgba(255, 95, 95, 0.08);
+  --error-border:   rgba(255, 95, 95, 0.25);
+  --error-text:     #ff6b6b;
+  --radius-sm:      8px;
+  --radius-md:      12px;
+  --radius-lg:      16px;
+}
+
+/* ── Outer container ──────────────────────────────────────────────────────── */
+
 .auth-container {
   min-height: 100vh;
+  background: var(--bg);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #10dfe2 0%, #c3cfe2 100%);
-  padding: 20px;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  font-family: 'DM Sans', sans-serif;
 }
+
+/* Subtle animated grid backdrop */
+.auth-container::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: 48px 48px;
+  animation: gridDrift 24s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Ambient accent orb */
+.auth-container::after {
+  content: '';
+  position: fixed;
+  width: 480px;
+  height: 480px;
+  background: var(--accent);
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.06;
+  top: -160px;
+  right: -120px;
+  pointer-events: none;
+  z-index: 0;
+  animation: orbFloat 10s ease-in-out infinite;
+}
+
+@keyframes gridDrift {
+  from { background-position: 0 0; }
+  to   { background-position: 48px 48px; }
+}
+
+@keyframes orbFloat {
+  0%, 100% { transform: translate(0, 0); }
+  50%       { transform: translate(-40px, 50px); }
+}
+
+/* ── Card ─────────────────────────────────────────────────────────────────── */
 
 .login-card {
-  background: rgba(4, 130, 80, 0.95);
-  backdrop-filter: blur(10px);
-  padding: 40px;
-  border-radius: 24px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 1;
   width: 100%;
-  max-width: 400px;
+  max-width: 420px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 44px 40px 36px;
+  animation: cardIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(24px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+/* Accent top-edge glow */
+.login-card::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 20%;
+  right: 20%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  border-radius: 2px;
+  opacity: 0.7;
+}
+
+/* ── Header ───────────────────────────────────────────────────────────────── */
 
 .auth-header {
+  margin-bottom: 32px;
   text-align: center;
-  margin-bottom: 30px;
 }
 
-.auth-header h1 { font-size: 2rem; color: #1a1a1a; margin-bottom: 8px; }
-.auth-header p { color: #666; font-size: 0.9rem; }
+.auth-header h1 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 30px;
+  letter-spacing: -1px;
+  color: var(--text);
+  line-height: 1.1;
+  margin: 0 0 8px;
+}
 
-.input-field {
+.auth-header p {
+  font-size: 14px;
+  color: var(--muted);
+  font-weight: 300;
+  margin: 0;
+}
+
+/* ── Error toast ──────────────────────────────────────────────────────────── */
+
+.error-toast {
+  background: var(--error-bg);
+  border: 1px solid var(--error-border);
+  color: var(--error-text);
+  font-size: 13px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
   margin-bottom: 20px;
+  animation: shake 0.35s ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-6px); }
+  40%       { transform: translateX(6px); }
+  60%       { transform: translateX(-4px); }
+  80%       { transform: translateX(4px); }
+}
+
+/* ── Form ─────────────────────────────────────────────────────────────────── */
+
+.auth-form {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 18px;
+}
+
+/* ── Input field ──────────────────────────────────────────────────────────── */
+
+.input-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
 }
 
 .input-field label {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #444;
   display: flex;
   align-items: center;
   gap: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+}
+
+.input-field label svg {
+  opacity: 0.7;
+  flex-shrink: 0;
 }
 
 .input-field input {
-  padding: 12px 16px;
-  border: 2px solid #eee;
-  border-radius: 12px;
+  height: 48px;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: var(--radius-md);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  padding: 0 16px;
   outline: none;
-  transition: 0.3s;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  width: 100%;
+}
+
+.input-field input::placeholder {
+  color: var(--muted);
+  opacity: 0.6;
+}
+
+.input-field input:hover {
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .input-field input:focus {
-  border-color: #000;
-  background: #fff;
+  border-color: var(--accent);
+  background: rgba(212, 240, 60, 0.04);
+  box-shadow: var(--input-focus-shadow);
 }
 
+/* ── Primary button ───────────────────────────────────────────────────────── */
+
 .btn-primary {
+  margin-top: 6px;
   width: 100%;
-  background: #000;
-  color: #fff;
-  padding: 14px;
-  border-radius: 12px;
+  height: 50px;
+  background: var(--accent);
   border: none;
-  font-weight: 600;
+  border-radius: var(--radius-md);
+  color: #0a0a0f;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.3px;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  cursor: pointer;
-  transition: transform 0.2s;
+  gap: 8px;
+  transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+  position: relative;
+  overflow: hidden;
 }
 
-.btn-primary:active { transform: scale(0.98); }
+.btn-primary:hover:not(:disabled) {
+  background: var(--accent-dim);
+  box-shadow: 0 0 24px var(--accent-glow);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ── Small spinner ────────────────────────────────────────────────────────── */
+
+.spinner-small {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(10, 10, 15, 0.3);
+  border-top-color: #0a0a0f;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Divider ──────────────────────────────────────────────────────────────── */
 
 .divider {
   display: flex;
   align-items: center;
-  text-align: center;
-  margin: 20px 0;
-  color: #ccc;
+  gap: 12px;
+  margin: 24px 0;
 }
 
-.divider::before, .divider::after {
+.divider::before,
+.divider::after {
   content: '';
   flex: 1;
-  border-bottom: 1px solid #eee;
+  height: 1px;
+  background: var(--border);
 }
 
-.divider span { padding: 0 10px; font-size: 0.8rem; }
+.divider span {
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+/* ── Google button ────────────────────────────────────────────────────────── */
 
 .btn-google {
   width: 100%;
-  background: #fff;
-  border: 2px solid #eee;
-  padding: 12px;
-  border-radius: 12px;
-  font-weight: 600;
+  height: 48px;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: var(--radius-md);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, transform 0.1s;
 }
 
+.btn-google:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.btn-google:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.btn-google:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Footer ───────────────────────────────────────────────────────────────── */
+
 .auth-footer {
+  margin-top: 24px;
   text-align: center;
-  margin-top: 25px;
-  font-size: 0.9rem;
-  color: #666;
+  font-size: 13px;
+  color: var(--muted);
 }
 
 .auth-link {
-  color: #000;
-  font-weight: 700;
+  color: var(--accent);
+  font-weight: 500;
   cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.auth-link:hover {
+  opacity: 0.75;
   text-decoration: underline;
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────────── */
+
+@media (max-width: 480px) {
+  .login-card {
+    padding: 32px 24px 28px;
+  }
+
+  .auth-header h1 {
+    font-size: 26px;
+  }
+}
+
+.admin-access-link {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #f1f5f9; /* Subtle separator */
+  text-align: center;
+}
+
+.admin-access-link a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #94a3b8; /* Muted slate */
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.admin-access-link a:hover {
+  color: #3b82f6; /* Vibrend Blue */
 }

@@ -1,8 +1,6 @@
 import axios from "axios";
 
-// TIP: In React, we usually use environment variables for the URL
-// Change this to "http://localhost:3000/api" for local web development
-const API_BASE ="http://localhost:3000/api";
+const API_BASE = import.meta.env.VITE_Backend_url;
 
 /**
  * Initiates an STK Push payment

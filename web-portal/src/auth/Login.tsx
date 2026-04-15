@@ -1,8 +1,10 @@
 import { useState,type FormEvent } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { Mail, Lock, LogIn, Chrome } from 'lucide-react';
+import { Mail, Lock, LogIn, Chrome, } from 'lucide-react';
 import '../css/Login.css';
+import { Link } from 'react-router-dom';
+import { Shield } from 'lucide-react';
 
 
 export default function Login() {
@@ -100,6 +102,11 @@ export default function Login() {
         New here? <span onClick={handleSignUp} className="auth-link">Create an account</span>
       </p>
     </div>
+    <div className="admin-access-link">
+    <Link to="/admin">
+      <Shield size={14} /> Admin Portal Access
+    </Link>
+  </div>
   </div>
 );
 }

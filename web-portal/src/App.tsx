@@ -3,7 +3,9 @@ import Login from './auth/Login';
 import Signup from './auth/SignUp';
 import Dashboard from './components/Dashboard';
 import ProtectedRoute from './components/ProtectedRoute';
+import AdminDashboard from './components/AdminDashboard';
 import './App.css';
+import AdminSignup from './auth/AdminSignUp';
 
 function App() {
   return (
@@ -12,6 +14,9 @@ function App() {
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/admin" element={<AdminSignup />} />
+
+
         <Route 
           path="/dashboard" 
           element={
@@ -20,6 +25,11 @@ function App() {
             </ProtectedRoute>
           } 
         />
+        <Route path="/adminDashboard" element={
+            <ProtectedRoute >
+              <AdminDashboard />
+            </ProtectedRoute>
+          } />
       </Routes>
     </BrowserRouter>
   );

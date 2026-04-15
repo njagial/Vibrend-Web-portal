@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// Use the same base URL as your destinations API
-const API_BASE = "http://localhost:3000/api/bookings";
+
+const API_BASE = import.meta.env.VITE_Backend_url;
 
 export interface Booking {
   id?: string;

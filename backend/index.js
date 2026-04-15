@@ -4,9 +4,9 @@ import destinationsRoute from "./routes/destinations.route.js";
 import paymentRoutes from "./routes/payment.route.js";
 import cors from "cors"
 import bookingRoutes from './routes/booking.route.js';
-import amadeusRoutes from './routes/amadeus.route.js';
 import dotenv from 'dotenv';
 import carRoutes from './routes/car.route.js';
+import flightRoutes from './routes/flights.route.js';
 
 dotenv.config();
 
@@ -28,7 +28,7 @@ app.use("/api/payments", paymentRoutes);
 
 app.use('/api/bookings', bookingRoutes); // This adds the /api/bookings prefix
 
-app.use('/api', amadeusRoutes); // This adds the /api/flights prefix for Amadeus routes
+app.use('/api/flights', flightRoutes);
 
 app.use('/api/cars', carRoutes); // This adds the /api/cars prefix for car routes
 

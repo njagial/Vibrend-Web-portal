@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+
 // Interface defining what a Destination looks like
 export interface Destination {
   id: string;
@@ -10,12 +11,11 @@ export interface Destination {
   image_url: string;
 }
 
-// In Web, 'localhost' is preferred over the IP for local dev.
-// Use environment variables for production.
-const API_BASE_URL = 'http://localhost:3000/api';
+
+const API_BASE = import.meta.env.VITE_Backend_url;
 
 const API = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: API_BASE,
   headers: {
     'Content-Type': 'application/json',
   }
