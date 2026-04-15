@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Car as CarIcon, Smartphone, CheckCircle, ShieldCheck, ArrowLeft, Fuel, Gauge, Settings } from 'lucide-react';
+import { Car as CarIcon, ArrowLeft, Fuel, Gauge, Settings } from 'lucide-react';
 import SkeletonCard from './SkeletonCard';
 import { initiatePayment, checkPaymentStatus } from '../apis/payment-api';
 import { createBooking } from '../apis/booking';

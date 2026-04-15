@@ -1,8 +1,12 @@
-import React from 'react';
 import { Compass, Car, Map, User } from 'lucide-react';
 import '../css/Navbar.css';
 
-const Navbar = ({ activeTab, setActiveTab }) => {
+interface NavbarProps {
+  activeTab: string;
+  setActiveTab: (tab: string) => void;
+}
+
+const Navbar = ({ activeTab, setActiveTab }: NavbarProps) => {
   return (
     <nav className="glass-nav">
       <div className="nav-container">

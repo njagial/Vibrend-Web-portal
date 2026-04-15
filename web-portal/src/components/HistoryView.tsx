@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Trash2, FileText, Calendar, DollarSign } from 'lucide-react';
+import { Trash2, FileText, Calendar } from 'lucide-react';
 import { fetchMyBookings, deleteBooking, type Booking } from '../apis/booking';
-import SkeletonCard from './SkeletonCard'; // Re-using your skeleton for loading
 
 const HistoryView: React.FC = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -31,7 +30,7 @@ const HistoryView: React.FC = () => {
         await deleteBooking(id);
         // Refresh local state without a full reload
         setBookings(prev => prev.filter(b => b.id !== id));
-      } catch (error) {
+      } catch  {
         alert("Failed to delete booking. Please try again.");
       }
     }
