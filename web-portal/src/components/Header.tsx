@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import '../css/Header.css';
 
 export default function Header() {
-  const { currentUser, userProfile, logout } = useAuth();
+  const { currentUser, logout } = useAuth();
+  const { userProfile } = useAuth() as any;
   const navigate = useNavigate();
 
   const handleLogout = async () => {

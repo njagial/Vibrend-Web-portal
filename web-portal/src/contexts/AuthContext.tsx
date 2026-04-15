@@ -13,6 +13,7 @@ import { auth } from "../configs/firebase";
 
 interface AuthContextType {
     currentUser: User | null;
+    userProfile: any;
     signup: (email: string, password: string) => Promise<never>;
     login: (email: string, password: string) => Promise<never>;
     logout: () => Promise<void>;
