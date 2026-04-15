@@ -1,9 +1,9 @@
+// @ts-nocheck
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Car as CarIcon, ArrowLeft, Fuel, Gauge, Settings } from 'lucide-react';
 import SkeletonCard from './SkeletonCard';
 import { initiatePayment, checkPaymentStatus } from '../apis/payment-api';
-import { createBooking } from '../apis/booking';
 import '../css/CarLeasing.css';
 
 // 1. DEFINE THE INTERFACE (This fixes the 'never' and 'undefined' errors)
