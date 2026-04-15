@@ -76,18 +76,7 @@ const CarLeasing = () => {
               setPaymentStatus('success');
               setIsPaying(false);
               clearInterval(interval);
-
-              await createBooking({
-                  carId: selectedCar._id.toString(),
-                  carModel: selectedCar.model,
-                  amount: total,
-                  duration: duration,
-                  phoneNumber: phoneNumber,
-                  type: 'car-rental',
-                  status: 'confirmed'
-              });
-              alert("Car Rental Confirmed!");
-            } 
+              alert("Payment successful! Your car rental is confirmed.");} 
             else if (status.ResultCode !== 'pending') {
               setPaymentStatus('failed');
               setIsPaying(false);

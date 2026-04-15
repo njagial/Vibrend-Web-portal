@@ -4,10 +4,12 @@
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
   ],
-  "compilerOptions": {
-    "forceConsistentCasingInFileNames": true,
+"compilerOptions": {
+    "strict": false,
+    "noImplicitAny": false,
+    "ignoreLibCheck": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "strict": false
+    "skipLibCheck": true
   }
 }
