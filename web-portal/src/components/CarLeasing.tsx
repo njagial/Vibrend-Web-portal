@@ -23,6 +23,7 @@ const CarLeasing = () => {
     const fetchFleet = async () => {
       try {
         const res = await axios.get(`${API_BASE}/cars`);
+        const res = await axios.get(`${API_BASE}/cars`);
         setCars(res.data);
       } catch (err) {
         console.error("Database error:", err);
